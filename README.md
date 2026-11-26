@@ -42,12 +42,18 @@ Full details are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Build WebAssembly & Serve
 ```bash
-# 1. Build WebAssembly target
-cmake --build build/cmake/web --target ArmageddonRecomp.js --parallel 8
+# 1. Activate Emscripten, build WebAssembly and stage the WA-only site
+source /path/to/emsdk/emsdk_env.sh
+.venv/bin/python tools/build.py --target web --jobs 3
 
 # 2. Stage WA-only Play site and serve on http://localhost:8080/
 .venv/bin/python tools/serve_web.py --serve 8080
 ```
+
+The build uses the kit driver and then stages this repository's WA-only player.
+Existing `assets.pak` is reused; use `tools/serve_web.py --repack` after changing
+the private installation. Add `--regenerate` to the build command when translation
+inputs change. The build needs prepared game inputs as described above.
 
 ### Headless Verification (Native macOS)
 ```bash

@@ -23,10 +23,28 @@ errors occurred. The real 146.7 MB pack also installed all 4,395 files; the
 installed executable matched the configured SHA-256, and reload made no second
 pack request. These checks validate installation, not game playback.
 
-A fresh WebAssembly build from the pinned kit was attempted. The sandboxed
-translation process ended with SIGTERM before producing a report; a retry
-outside the sandbox is pending. No successful fresh Wasm build or gameplay
-result is claimed for this change yet.
+Fresh translation from the pinned kit `010cbcf` completed: 13,188 functions,
+20,396 dispatch entries, no failures, unmodelled instructions, recovery errors
+or jump-table gaps. The withdrawn candidate has data provenance. Real release
+Wasm builds linked with Emscripten 7.0.1 and the documented 6.0.11 toolchain.
+The first sandboxed translation was terminated; the successful retry ran outside
+that sandbox. The final local build uses 6.0.11.
+
+The kit driver then tried to stage a generic launcher removed from this kit
+revision. `tools/build.py` now retains the normal kit build/lock flow and directs
+its post-link staging callback to `tools/serve_web.py`, producing the WA-only
+site and reusing its existing private asset pack. README commands use this path.
+
+Headless Chrome 157 starts the guest and reports its 640x480 display mode and
+audio generation, but the canvas GPU queue fails with an external-instance
+error, followed by the presenter's completion timeout/device loss. The same
+error reproduces with a plain JavaScript WebGPU canvas clear, without loading
+Wasm or the recompiler; an empty GPU queue succeeds. The unchanged kit's browser readback/completion
+fixture passes all 1,004 checks. No visible game frame,
+sustained gameplay or FPS improvement is claimed. The local build is available
+for hardware-browser review; gameplay optimization follows that review.
+The kit submodule remains pinned and unchanged. An experimental instance-import
+change did not resolve the game failure and is excluded from this PR.
 
 The inherited milestones and pending gameplay checks below are historical.
 
